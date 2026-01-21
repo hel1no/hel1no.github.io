@@ -1,94 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎰 CASINO | Play Now</title>
+  <title>🎰 VIP CASINO | Jetzt Spielen</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ===== RESET & BASE ===== */
+    /* ===== RESET & VARIABLES ===== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
     }
 
     :root {
+      --primary: #0f0f23;
+      --secondary: #1a1a2e;
+      --accent: #00ff88;
+      --danger: #ff3860;
+      --white: #ffffff;
       --gold: #FFD700;
-      --gold-light: #FFED4E;
-      --gold-dark: #B8860B;
-      --red: #FF3860;
-      --green: #23D160;
-      --blue: #3273DC;
-      --purple: #9B5DE5;
-      --black: #0A0A0A;
-      --dark: #1A1A2E;
-      --darker: #121212;
-      --light: #F8F9FA;
     }
 
     body {
-      background: var(--darker);
-      color: var(--light);
+      background: var(--primary);
+      color: var(--white);
       min-height: 100vh;
-      overflow-x: hidden;
-      background-image:
-        radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 80% 20%, rgba(155, 93, 229, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 40% 40%, rgba(255, 56, 96, 0.03) 0%, transparent 30%);
     }
 
-    /* ===== SCROLLBAR ===== */
-    ::-webkit-scrollbar {
-      width: 10px;
+    /* ===== MODALS ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
     }
 
-    ::-webkit-scrollbar-track {
-      background: var(--dark);
+    .modal-content {
+      background: var(--secondary);
+      padding: 40px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 50px rgba(0, 255, 136, 0.3);
     }
 
-    ::-webkit-scrollbar-thumb {
-      background: var(--gold);
-      border-radius: 5px;
+    .modal h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--accent);
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--gold-light);
+    .form-group {
+      margin-bottom: 20px;
     }
 
-    /* ===== GLOW EFFECTS ===== */
-    .glow-text {
-      text-shadow: 0 0 10px currentColor;
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ccc;
     }
 
-    .glow-box {
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 16px;
     }
 
-    .pulse {
-      animation: pulse 2s infinite;
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex: 1;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: black;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
+    }
+
+    .error-message {
+      color: var(--danger);
+      text-align: center;
+      margin-top: 10px;
+      min-height: 20px;
     }
 
     /* ===== HEADER ===== */
     .header {
-      background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 20px 40px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 20px 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 3px solid var(--gold);
-      box-shadow: 0 5px 30px rgba(255, 215, 0, 0.2);
+      background: rgba(15, 15, 35, 0.95);
+      border-bottom: 2px solid rgba(0, 255, 136, 0.2);
     }
 
     .logo {
@@ -99,632 +146,316 @@
     }
 
     .logo-icon {
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       color: var(--gold);
-      filter: drop-shadow(0 0 10px var(--gold));
     }
 
     .logo-text {
-      font-size: 2.2rem;
-      font-weight: 900;
-      background: linear-gradient(45deg, var(--gold), var(--gold-light));
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #00ff88, #00ccff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: 2px;
     }
 
-    .balance-container {
+    /* ===== USER INFO ===== */
+    .user-info {
       display: flex;
       align-items: center;
-      gap: 25px;
+      gap: 20px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
     }
 
     .balance-card {
-      background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(40, 40, 60, 0.9));
-      padding: 15px 30px;
-      border-radius: 15px;
-      border: 2px solid var(--gold);
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      transition: all 0.3s ease;
-    }
-
-    .balance-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
-    }
-
-    .balance-icon {
-      font-size: 1.8rem;
-      color: var(--gold);
-    }
-
-    .balance-amount {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: var(--gold-light);
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    }
-
-    .reset-btn {
-      background: linear-gradient(45deg, var(--red), #FF1493);
-      color: white;
-      border: none;
-      padding: 12px 25px;
+      padding: 12px 20px;
       border-radius: 12px;
-      font-weight: bold;
-      cursor: pointer;
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(0, 255, 136, 0.3);
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: all 0.3s ease;
     }
 
-    .reset-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(255, 56, 96, 0.4);
+    .balance-amount {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--accent);
     }
 
-    /* ===== MAIN CONTAINER ===== */
+    /* ===== MAIN CONTENT ===== */
     .main-container {
-      max-width: 1600px;
-      margin: 140px auto 40px;
-      padding: 0 20px;
+      margin-top: 120px;
+      padding: 20px 5%;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    /* ===== WELCOME SECTION ===== */
-    .welcome-section {
+    /* ===== HERO SECTION ===== */
+    .hero {
       text-align: center;
-      margin-bottom: 60px;
-      padding: 40px;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 25px;
-      border: 1px solid rgba(255, 215, 0, 0.1);
+      padding: 60px 20px;
+      margin-bottom: 40px;
     }
 
-    .welcome-title {
+    .hero-title {
       font-size: 3.5rem;
       margin-bottom: 20px;
-      background: linear-gradient(45deg, var(--gold), var(--purple), var(--blue));
+      background: linear-gradient(45deg, #00ff88, #00ccff, #ff00ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s infinite alternate;
     }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
-
-    .welcome-subtitle {
-      color: #AAA;
+    .hero-subtitle {
       font-size: 1.2rem;
-      max-width: 800px;
-      margin: 0 auto;
-      line-height: 1.8;
+      color: #aaa;
+      max-width: 700px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
     }
 
     /* ===== GAMES GRID ===== */
     .games-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 30px;
-      margin: 40px 0;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+      margin-bottom: 60px;
     }
 
     .game-card {
-      background: linear-gradient(145deg, rgba(30, 30, 50, 0.9), rgba(20, 20, 35, 0.9));
-      border-radius: 25px;
-      padding: 40px 30px;
+      background: linear-gradient(145deg, #1a1a2e, #16213e);
+      border-radius: 20px;
+      padding: 30px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      overflow: hidden;
+      transition: all 0.3s ease;
       border: 2px solid transparent;
     }
 
-    .game-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-      transition: 0.5s;
-    }
-
-    .game-card:hover::before {
-      left: 100%;
-    }
-
     .game-card:hover {
-      transform: translateY(-15px) scale(1.02);
-      border-color: var(--gold);
-      box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
+      transform: translateY(-10px);
+      border-color: var(--accent);
+      box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
     }
 
     .game-icon {
-      font-size: 5rem;
-      margin-bottom: 25px;
-      transition: all 0.3s ease;
-    }
-
-    .game-card:hover .game-icon {
-      transform: scale(1.2) rotate(5deg);
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: var(--accent);
     }
 
     .game-title {
-      font-size: 2rem;
+      font-size: 1.8rem;
       margin-bottom: 15px;
-      color: var(--gold-light);
-      font-weight: 800;
-      letter-spacing: 1px;
+      color: white;
     }
 
     .game-desc {
-      color: #BBB;
+      color: #bbb;
       margin-bottom: 25px;
-      font-size: 1rem;
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     .play-btn {
-      background: linear-gradient(45deg, var(--gold), var(--gold-dark));
-      color: #000;
+      background: var(--accent);
+      color: black;
       border: none;
-      padding: 15px 40px;
-      border-radius: 15px;
-      font-weight: 900;
-      font-size: 1.1rem;
+      padding: 12px 30px;
+      border-radius: 10px;
+      font-weight: bold;
       cursor: pointer;
-      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       margin: 0 auto;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      transition: all 0.3s;
     }
 
     .play-btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 10px 20px rgba(255, 215, 0, 0.4);
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
     }
 
     /* ===== GAME AREAS ===== */
     .game-area {
       display: none;
-      background: rgba(10, 10, 10, 0.95);
-      border-radius: 30px;
-      padding: 40px;
-      margin-top: 40px;
-      border: 3px solid var(--gold);
-      animation: slideUp 0.5s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(50px); }
-      to { opacity: 1; transform: translateY(0); }
+      background: var(--secondary);
+      border-radius: 25px;
+      padding: 30px;
+      margin-top: 30px;
+      border: 3px solid var(--accent);
     }
 
     .game-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 40px;
-      padding-bottom: 25px;
-      border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(0, 255, 136, 0.3);
     }
 
     .game-title-area {
-      font-size: 2.5rem;
-      color: var(--gold);
+      font-size: 2rem;
+      color: var(--accent);
       display: flex;
       align-items: center;
       gap: 15px;
     }
 
     .back-btn {
-      background: linear-gradient(45deg, var(--red), #C70039);
+      background: var(--danger);
       color: white;
       border: none;
-      padding: 12px 25px;
-      border-radius: 12px;
+      padding: 10px 20px;
+      border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-weight: bold;
-      transition: all 0.3s ease;
     }
 
-    .back-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(255, 56, 96, 0.4);
-    }
-
-    /* ===== SLOT MACHINE ==== */
-    .slot-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-    }
-
+    /* ===== SLOT MACHINE ===== */
     .slot-machine {
       display: flex;
-      gap: 25px;
-      position: relative;
-    }
-
-    .slot-machine::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 110%;
-      height: 120%;
-      background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
-      z-index: -1;
+      justify-content: center;
+      gap: 20px;
+      margin: 40px 0;
     }
 
     .slot-reel {
-      width: 140px;
-      height: 140px;
+      width: 120px;
+      height: 120px;
       background: linear-gradient(145deg, #2c3e50, #34495e);
-      border-radius: 20px;
+      border-radius: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 4.5rem;
-      font-weight: bold;
-      position: relative;
+      font-size: 3.5rem;
+      border: 4px solid var(--accent);
       overflow: hidden;
-      border: 5px solid var(--gold);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 10px 25px rgba(0, 0, 0, 0.5);
-    }
-
-    .slot-reel::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.1) 50%, transparent 70%);
-      animation: shine 2s infinite;
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
     }
 
     .slot-reel.spinning {
-      animation: spinReel 0.1s linear infinite;
+      animation: spin 0.5s linear infinite;
     }
 
-    @keyframes spinReel {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 140px; }
+    @keyframes spin {
+      0% { transform: rotateX(0); }
+      100% { transform: rotateX(360deg); }
     }
 
-    /* ===== ROULETTE ===== */
-    .roulette-container {
+    /* ===== CONTROLS ===== */
+    .controls {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 40px;
-    }
-
-    .roulette-wheel {
-      width: 400px;
-      height: 400px;
-      position: relative;
-      border-radius: 50%;
-      border: 15px solid var(--gold-dark);
-      overflow: hidden;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-    }
-
-    .roulette-inner {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80%;
-      height: 80%;
-      background: var(--dark);
-      border-radius: 50%;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--gold);
-      font-size: 2rem;
-      font-weight: bold;
-    }
-
-    .roulette-ball {
-      position: absolute;
-      width: 25px;
-      height: 25px;
-      background: white;
-      border-radius: 50%;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
-      box-shadow: 0 0 15px white;
-    }
-
-    /* ===== BLACKJACK ===== */
-    .blackjack-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .blackjack-table {
-      width: 100%;
-      height: 400px;
-      background: linear-gradient(45deg, #006400, #228B22);
-      border-radius: 25px;
-      border: 8px solid var(--gold);
-      padding: 30px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .blackjack-table::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(0, 0, 0, 0.1) 10px,
-        rgba(0, 0, 0, 0.1) 20px
-      );
-    }
-
-    .card {
-      width: 100px;
-      height: 150px;
-      background: white;
-      border-radius: 12px;
-      display: inline-flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      margin: 0 10px;
-      font-size: 2.5rem;
-      font-weight: bold;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 12px;
-      border: 2px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .card.red { color: var(--red); }
-    .card.black { color: var(--black); }
-
-    /* ===== DICE GAME ===== */
-    .dice-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .dice {
-      width: 120px;
-      height: 120px;
-      background: white;
-      border-radius: 20px;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 1s;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    }
-
-    .dice.rolling {
-      animation: rollDice 1s ease-out;
-    }
-
-    @keyframes rollDice {
-      0% { transform: rotateX(0) rotateY(0); }
-      25% { transform: rotateX(180deg) rotateY(180deg); }
-      50% { transform: rotateX(360deg) rotateY(360deg); }
-      75% { transform: rotateX(540deg) rotateY(540deg); }
-      100% { transform: rotateX(720deg) rotateY(720deg); }
-    }
-
-    /* ===== GAME CONTROLS ===== */
-    .game-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 30px;
+      gap: 25px;
       margin-top: 40px;
     }
 
-    .bet-control {
+    .bet-controls {
       display: flex;
+      gap: 15px;
       align-items: center;
-      gap: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 25px;
-      border-radius: 20px;
-      border: 2px solid rgba(255, 215, 0, 0.3);
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .bet-input {
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid var(--gold);
-      border-radius: 12px;
-      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      padding: 12px;
       color: white;
-      font-size: 1.3rem;
-      width: 180px;
+      font-size: 1.1rem;
+      width: 150px;
       text-align: center;
       font-weight: bold;
     }
 
-    .bet-btn {
-      background: linear-gradient(45deg, var(--gold), var(--gold-dark));
-      color: #000;
-      border: none;
-      padding: 15px 35px;
-      border-radius: 12px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1.1rem;
+    .chip-container {
       display: flex;
-      align-items: center;
       gap: 10px;
-    }
-
-    .bet-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
-    }
-
-    .chip-selector {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     .chip {
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
       border: 3px solid white;
-      font-size: 1.2rem;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
     .chip:hover {
-      transform: scale(1.1) rotate(15deg);
+      transform: scale(1.1);
     }
-
-    .chip-10 { background: radial-gradient(circle, #3498db, #2980b9); }
-    .chip-50 { background: radial-gradient(circle, #e74c3c, #c0392b); }
-    .chip-100 { background: radial-gradient(circle, #2ecc71, #27ae60); }
-    .chip-500 { background: radial-gradient(circle, #9b59b6, #8e44ad); }
-    .chip-1000 { background: radial-gradient(circle, #f1c40f, #f39c12); }
 
     /* ===== RESULTS ===== */
     .result {
       margin-top: 30px;
-      padding: 25px;
-      border-radius: 20px;
+      padding: 20px;
+      border-radius: 15px;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: bold;
       display: none;
-      animation: resultPop 0.5s ease;
-      border: 3px solid transparent;
-    }
-
-    @keyframes resultPop {
-      0% { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
     }
 
     .result.win {
-      background: linear-gradient(45deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.2));
-      border-color: var(--green);
-      color: var(--green);
+      background: rgba(0, 255, 136, 0.1);
+      border: 2px solid var(--accent);
+      color: var(--accent);
       display: block;
-      box-shadow: 0 0 30px rgba(46, 204, 113, 0.3);
     }
 
     .result.loss {
-      background: linear-gradient(45deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.2));
-      border-color: var(--red);
-      color: var(--red);
+      background: rgba(255, 56, 96, 0.1);
+      border: 2px solid var(--danger);
+      color: var(--danger);
       display: block;
-      box-shadow: 0 0 30px rgba(231, 76, 60, 0.3);
     }
 
     /* ===== FOOTER ===== */
     .footer {
-      background: rgba(10, 10, 10, 0.95);
-      padding: 40px;
       text-align: center;
+      padding: 40px 20px;
       margin-top: 80px;
-      border-top: 2px solid rgba(255, 215, 0, 0.3);
-    }
-
-    .footer-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .footer-logo {
-      font-size: 2rem;
-      color: var(--gold);
-    }
-
-    .footer-text {
       color: #888;
-      font-size: 0.9rem;
-      max-width: 600px;
-      line-height: 1.6;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     /* ===== RESPONSIVE ===== */
-    @media (max-width: 1200px) {
-      .games-grid {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      }
-
-      .roulette-wheel {
-        width: 350px;
-        height: 350px;
-      }
-    }
-
     @media (max-width: 768px) {
       .header {
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
         padding: 15px;
+      }
+
+      .hero-title {
+        font-size: 2.5rem;
       }
 
       .games-grid {
@@ -736,1045 +467,395 @@
         align-items: center;
       }
 
-      .slot-reel {
-        width: 120px;
-        height: 120px;
-      }
-
-      .game-controls {
+      .game-header {
         flex-direction: column;
-      }
-
-      .bet-control {
-        flex-direction: column;
+        gap: 15px;
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
-<!-- Header -->
 <header class="header">
-  <div class="logo" onclick="resetBalance()">
-    <i class="fas fa-diamond logo-icon pulse"></i>
-    <h1 class="logo-text">CASINO</h1>
+  <div class="logo" onclick="goHome()">
+    <i class="fas fa-crown logo-icon"></i>
+    <h1 class="logo-text">VIP CASINO</h1>
   </div>
 
-  <div class="balance-container">
+  <div id="guestView" class="user-info">
+    <button class="btn btn-primary" onclick="showLogin()">
+      <i class="fas fa-sign-in-alt"></i> Login
+    </button>
+    <button class="btn btn-secondary" onclick="showRegister()">
+      <i class="fas fa-user-plus"></i> Register
+    </button>
+  </div>
+
+  <div id="userView" class="user-info" style="display: none;">
+    <div class="user-avatar" id="userAvatar">U</div>
     <div class="balance-card">
-      <i class="fas fa-coins balance-icon"></i>
-      <span class="balance-amount" id="balanceAmount">10,000</span>
+      <i class="fas fa-coins" style="color: #00ff88;"></i>
+      <span class="balance-amount" id="balanceAmount">0</span>
     </div>
-    <button class="reset-btn" onclick="resetBalance()">
-      <i class="fas fa-redo"></i> RESET
+    <button class="btn btn-secondary" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
     </button>
   </div>
 </header>
 
-<!-- Main Container -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
+    <div class="form-group">
+      <label for="loginUsername">Benutzername:</label>
+      <input type="text" id="loginUsername" placeholder="Dein Benutzername">
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Passwort:</label>
+      <input type="password" id="loginPassword" placeholder="Dein Passwort">
+    </div>
+    <div id="loginError" class="error-message"></div>
+    <div class="form-buttons">
+      <button class="btn btn-primary" onclick="performLogin()">Login</button>
+      <button class="btn btn-secondary" onclick="hideModal('loginModal')">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<div id="registerModal" class="modal">
+  <div class="modal-content">
+    <h2><i class="fas fa-user-plus"></i> Registrieren</h2>
+    <div class="form-group">
+      <label for="regUsername">Benutzername:</label>
+      <input type="text" id="regUsername" placeholder="Wähle einen Benutzernamen">
+    </div>
+    <div class="form-group">
+      <label for="regEmail">Email:</label>
+      <input type="email" id="regEmail" placeholder="Deine Email-Adresse">
+    </div>
+    <div class="form-group">
+      <label for="regPassword">Passwort:</label>
+      <input type="password" id="regPassword" placeholder="Mindestens 6 Zeichen">
+    </div>
+    <div id="registerError" class="error-message"></div>
+    <div class="form-buttons">
+      <button class="btn btn-primary" onclick="performRegister()">Registrieren</button>
+      <button class="btn btn-secondary" onclick="hideModal('registerModal')">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
 <div class="main-container">
-  <!-- Welcome -->
-  <div class="welcome-section">
-    <h1 class="welcome-title">🎰 WELCOME TO CASINO 🎲</h1>
-    <p class="welcome-subtitle">
-      Experience premium casino games with stunning visuals. No signup required.<br>
-      Start with 10,000 credits. Play responsibly.
+  <div class="hero">
+    <h1 class="hero-title">🎰 WILLKOMMEN IM VIP CASINO 🎲</h1>
+    <p class="hero-subtitle">
+      Spiele die besten Casino-Spiele mit Echtzeit-Guthaben. Registriere dich jetzt und erhalte 10.000 Gratis-Credits!
     </p>
+    <div id="heroButtons">
+      <button class="btn btn-primary" style="padding: 15px 40px; font-size: 1.2rem;" onclick="showRegister()">
+        <i class="fas fa-gem"></i> KOSTENLOS SPIELEN
+      </button>
+    </div>
   </div>
 
-  <!-- Games Grid -->
   <div class="games-grid" id="gamesGrid">
-    <!-- Games loaded dynamically -->
   </div>
 
-  <!-- Game Areas -->
   <div class="game-area" id="slotGame">
     <div class="game-header">
       <h2 class="game-title-area">
         <i class="fas fa-sliders-h"></i> SLOT MACHINE
       </h2>
       <button class="back-btn" onclick="hideGame()">
-        <i class="fas fa-times"></i> CLOSE
+        <i class="fas fa-times"></i> SCHLIESSEN
       </button>
     </div>
 
     <div class="slot-container">
       <div class="slot-machine">
-        <div class="slot-reel" id="slotReel1">💎</div>
-        <div class="slot-reel" id="slotReel2">💎</div>
-        <div class="slot-reel" id="slotReel3">💎</div>
+        <div class="slot-reel" id="slotReel1">🍒</div>
+        <div class="slot-reel" id="slotReel2">🍒</div>
+        <div class="slot-reel" id="slotReel3">🍒</div>
       </div>
 
-      <div class="game-controls">
-        <div class="bet-control">
+      <div class="controls">
+        <div class="bet-controls">
           <input type="number" class="bet-input" id="slotBet" value="100" min="10" max="10000">
-          <button class="bet-btn" onclick="spinSlot()">
-            <i class="fas fa-play"></i> SPIN
+          <button class="btn btn-primary" onclick="spinSlot()">
+            <i class="fas fa-play"></i> SPINNEN
           </button>
         </div>
-        <div class="chip-selector">
-          <div class="chip chip-10" onclick="setBet(10)">10</div>
-          <div class="chip chip-50" onclick="setBet(50)">50</div>
-          <div class="chip chip-100" onclick="setBet(100)">100</div>
-          <div class="chip chip-500" onclick="setBet(500)">500</div>
-          <div class="chip chip-1000" onclick="setBet(1000)">1000</div>
+        <div class="chip-container">
+          <div class="chip" style="background: #3498db;" onclick="setBet(10)">10</div>
+          <div class="chip" style="background: #e74c3c;" onclick="setBet(50)">50</div>
+          <div class="chip" style="background: #2ecc71;" onclick="setBet(100)">100</div>
+          <div class="chip" style="background: #9b59b6;" onclick="setBet(500)">500</div>
+          <div class="chip" style="background: #f1c40f;" onclick="setBet(1000)">1000</div>
         </div>
       </div>
     </div>
 
     <div class="result" id="slotResult"></div>
   </div>
-
-  <!-- Roulette -->
-  <div class="game-area" id="rouletteGame">
-    <div class="game-header">
-      <h2 class="game-title-area">
-        <i class="fas fa-dharmachakra"></i> ROULETTE
-      </h2>
-      <button class="back-btn" onclick="hideGame()">
-        <i class="fas fa-times"></i> CLOSE
-      </button>
-    </div>
-
-    <div class="roulette-container">
-      <div class="roulette-wheel" id="rouletteWheel">
-        <div class="roulette-inner">CASINO</div>
-        <div class="roulette-ball" id="rouletteBall"></div>
-      </div>
-
-      <div class="game-controls">
-        <div class="bet-control">
-          <input type="number" class="bet-input" id="rouletteBet" value="100" min="10" max="10000">
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="bet-btn" onclick="placeRouletteBet('red')" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">RED</button>
-            <button class="bet-btn" onclick="placeRouletteBet('black')" style="background: linear-gradient(45deg, #2c3e50, #34495e);">BLACK</button>
-            <button class="bet-btn" onclick="placeRouletteBet('even')">EVEN</button>
-            <button class="bet-btn" onclick="placeRouletteBet('odd')">ODD</button>
-            <button class="bet-btn" onclick="placeRouletteBet('1-18')">1-18</button>
-            <button class="bet-btn" onclick="placeRouletteBet('19-36')">19-36</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="result" id="rouletteResult"></div>
-  </div>
-
-  <!-- Blackjack -->
-  <div class="game-area" id="blackjackGame">
-    <div class="game-header">
-      <h2 class="game-title-area">
-        <i class="fas fa-club"></i> BLACKJACK
-      </h2>
-      <button class="back-btn" onclick="hideGame()">
-        <i class="fas fa-times"></i> CLOSE
-      </button>
-    </div>
-
-    <div class="blackjack-container">
-      <div class="blackjack-table">
-        <div style="text-align: center; margin-bottom: 60px;">
-          <h3 style="color: white; margin-bottom: 20px;">DEALER</h3>
-          <div class="cards-container" id="dealerCards"></div>
-        </div>
-
-        <div style="text-align: center;">
-          <h3 style="color: white; margin-bottom: 20px;">PLAYER</h3>
-          <div class="cards-container" id="playerCards"></div>
-        </div>
-      </div>
-
-      <div class="game-controls">
-        <div class="bet-control">
-          <input type="number" class="bet-input" id="blackjackBet" value="100" min="10" max="10000">
-          <div style="display: flex; gap: 10px;">
-            <button class="bet-btn" onclick="startBlackjack()" id="blackjackStart">DEAL</button>
-            <button class="bet-btn" onclick="hit()" id="blackjackHit" style="display: none;">HIT</button>
-            <button class="bet-btn" onclick="stand()" id="blackjackStand" style="display: none;">STAND</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="result" id="blackjackResult"></div>
-  </div>
-
-  <!-- Dice -->
-  <div class="game-area" id="diceGame">
-    <div class="game-header">
-      <h2 class="game-title-area">
-        <i class="fas fa-dice"></i> DICE GAME
-      </h2>
-      <button class="back-btn" onclick="hideGame()">
-        <i class="fas fa-times"></i> CLOSE
-      </button>
-    </div>
-
-    <div class="dice-container">
-      <div style="text-align: center;">
-        <div id="dice" class="dice"></div>
-      </div>
-
-      <div class="game-controls">
-        <div class="bet-control">
-          <input type="number" class="bet-input" id="diceBet" value="100" min="10" max="10000">
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button class="bet-btn" onclick="rollDice('even')">EVEN</button>
-            <button class="bet-btn" onclick="rollDice('odd')">ODD</button>
-            <button class="bet-btn" onclick="rollDice('high')">HIGH (4-6)</button>
-            <button class="bet-btn" onclick="rollDice('low')">LOW (1-3)</button>
-            <button class="bet-btn" onclick="rollDice('specific')">SPECIFIC</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="result" id="diceResult"></div>
-  </div>
-
-  <!-- Baccarat -->
-  <div class="game-area" id="baccaratGame">
-    <div class="game-header">
-      <h2 class="game-title-area">
-        <i class="fas fa-gem"></i> BACCARAT
-      </h2>
-      <button class="back-btn" onclick="hideGame()">
-        <i class="fas fa-times"></i> CLOSE
-      </button>
-    </div>
-
-    <div class="baccarat-container">
-      <div style="width: 100%; display: flex; justify-content: space-around; margin: 40px 0;">
-        <div style="text-align: center;">
-          <h3 style="color: var(--blue); margin-bottom: 20px;">BANKER</h3>
-          <div class="cards-container" id="bankerCards"></div>
-        </div>
-        <div style="text-align: center;">
-          <h3 style="color: var(--red); margin-bottom: 20px;">PLAYER</h3>
-          <div class="cards-container" id="baccaratPlayerCards"></div>
-        </div>
-      </div>
-
-      <div class="game-controls">
-        <div class="bet-control">
-          <input type="number" class="bet-input" id="baccaratBet" value="100" min="10" max="10000">
-          <div style="display: flex; gap: 10px;">
-            <button class="bet-btn" onclick="playBaccarat('player')" style="background: linear-gradient(45deg, var(--blue), #2980b9);">PLAYER</button>
-            <button class="bet-btn" onclick="playBaccarat('banker')" style="background: linear-gradient(45deg, var(--red), #c0392b);">BANKER</button>
-            <button class="bet-btn" onclick="playBaccarat('tie')" style="background: linear-gradient(45deg, var(--green), #27ae60);">TIE</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="result" id="baccaratResult"></div>
-  </div>
-
-  <!-- Coin Flip -->
-  <div class="game-area" id="coinFlipGame">
-    <div class="game-header">
-      <h2 class="game-title-area">
-        <i class="fas fa-coins"></i> COIN FLIP
-      </h2>
-      <button class="back-btn" onclick="hideGame()">
-        <i class="fas fa-times"></i> CLOSE
-      </button>
-    </div>
-
-    <div style="text-align: center; margin: 40px 0;">
-      <div id="coin" style="width: 200px; height: 200px; margin: 0 auto; position: relative; transform-style: preserve-3d; transition: transform 1s;">
-        <div style="position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: linear-gradient(45deg, #FFD700, #FFA500); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #8b4513; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); border: 10px solid #B8860B;">H</div>
-        <div style="position: absolute; width: 100%; height: 100%; backface-visibility: hidden; background: linear-gradient(45deg, #c0c0c0, #e8e8e8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #333; transform: rotateY(180deg); box-shadow: inset 0 0 20px rgba(0,0,0,0.5); border: 10px solid #808080;">T</div>
-      </div>
-    </div>
-
-    <div class="game-controls">
-      <div class="bet-control">
-        <input type="number" class="bet-input" id="coinBet" value="100" min="10" max="10000">
-        <div style="display: flex; gap: 10px;">
-          <button class="bet-btn" onclick="flipCoin('heads')" style="background: linear-gradient(45deg, #FFD700, #FFA500); color: #333;">HEADS</button>
-          <button class="bet-btn" onclick="flipCoin('tails')" style="background: linear-gradient(45deg, #c0c0c0, #808080); color: #333;">TAILS</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="result" id="coinResult"></div>
-  </div>
 </div>
 
-<!-- Footer -->
 <footer class="footer">
-  <div class="footer-content">
-    <div class="footer-logo">
-      <i class="fas fa-diamond"></i> CASINO
-    </div>
-    <p class="footer-text">
-      This is a simulation for entertainment purposes only. No real money is involved.<br>
-      Play responsibly. For players 18+.
-    </p>
-  </div>
+  <p>© 2024 VIP CASINO - Nur zu Unterhaltungszwecken. Kein echtes Geld.</p>
+  <p style="margin-top: 10px; font-size: 0.9em;">Für Spieler ab 18 Jahren. Spielen Sie verantwortungsbewusst.</p>
 </footer>
 
 <script>
-  // ===== GAME ENGINE =====
-  let balance = 10000;
+  // ===== KONFIGURATION =====
+  // WICHTIG: Wenn die App auf Render läuft, ist die API auf der gleichen URL.
+  // Lokal nutzen wir localhost:3000
+  const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : '';
+
+  // ===== GLOBALE VARIABLEN =====
+  let currentUser = null;
+  let balance = 0;
   let currentGame = null;
-  let blackjackGame = null;
-  let baccaratGame = null;
+  let token = localStorage.getItem('casino_token');
 
-  // ===== INITIALIZATION =====
+  // ===== INITIALISIERUNG =====
   document.addEventListener('DOMContentLoaded', function() {
-    // Load balance from localStorage
-    const savedBalance = localStorage.getItem('casinoBalance');
-    if (savedBalance) {
-      balance = parseInt(savedBalance);
-    }
-    updateBalanceDisplay();
-
-    // Initialize games
+    checkAuth();
     initGames();
-    initDice();
-    createRouletteWheel();
 
-    // Auto-save every 5 seconds
-    setInterval(saveBalance, 5000);
-
-    // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && currentGame) {
-        hideGame();
-      }
-      if (e.key === 'r' && e.ctrlKey) {
-        resetBalance();
+      if (e.key === 'Escape') {
+        hideAllModals();
+        if (currentGame) hideGame();
       }
     });
   });
 
-  // ===== GAMES INIT =====
-  function initGames() {
-    const games = [
-      { id: 'slot', name: 'SLOT MACHINE', icon: 'fas fa-sliders-h', desc: 'Classic slots with 3 reels. Match symbols to win big!' },
-      { id: 'roulette', name: 'ROULETTE', icon: 'fas fa-dharmachakra', desc: 'The royal game of chance. Bet on red, black, or numbers.' },
-      { id: 'blackjack', name: 'BLACKJACK', icon: 'fas fa-club', desc: 'Beat the dealer without going over 21. Classic card game.' },
-      { id: 'dice', name: 'DICE GAME', icon: 'fas fa-dice', desc: 'Roll the dice. Bet on high, low, even, or odd.' },
-      { id: 'baccarat', name: 'BACCARAT', icon: 'fas fa-gem', desc: 'Elegant card comparison game. Banker or Player?' },
-      { id: 'coinFlip', name: 'COIN FLIP', icon: 'fas fa-coins', desc: 'Simple heads or tails. 50/50 chance to double your bet.' }
-    ];
-
-    const gamesGrid = document.getElementById('gamesGrid');
-    gamesGrid.innerHTML = '';
-
-    games.forEach(game => {
-      const gameCard = document.createElement('div');
-      gameCard.className = 'game-card';
-      gameCard.onclick = () => showGame(game.id);
-
-      gameCard.innerHTML = `
-                    <div class="game-icon">
-                        <i class="${game.icon}"></i>
-                    </div>
-                    <h3 class="game-title">${game.name}</h3>
-                    <p class="game-desc">${game.desc}</p>
-                    <button class="play-btn">
-                        <i class="fas fa-play"></i> PLAY NOW
-                    </button>
-                `;
-      gamesGrid.appendChild(gameCard);
-    });
+  // ===== AUTHENTIFIZIERUNG =====
+  function checkAuth() {
+    if (token) {
+      loadUserData();
+    } else {
+      showGuestView();
+    }
   }
 
-  // ===== BALANCE FUNCTIONS =====
-  function updateBalanceDisplay() {
-    document.getElementById('balanceAmount').textContent = balance.toLocaleString();
+  function showLogin() {
+    showModal('loginModal');
+    document.getElementById('loginError').textContent = '';
   }
 
-  function updateBalance(amount) {
+  function showRegister() {
+    showModal('registerModal');
+    document.getElementById('registerError').textContent = '';
+  }
+
+  async function performLogin() {
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+
+    if (!username || !password) {
+      document.getElementById('loginError').textContent = 'Bitte fülle alle Felder aus';
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        token = data.token;
+        localStorage.setItem('casino_token', token);
+        currentUser = data.user;
+        balance = data.user.balance;
+
+        hideModal('loginModal');
+        showUserView();
+        updateUI();
+      } else {
+        document.getElementById('loginError').textContent = data.error || 'Login fehlgeschlagen';
+      }
+    } catch (error) {
+      document.getElementById('loginError').textContent = 'Verbindungsfehler';
+    }
+  }
+
+  async function performRegister() {
+    const username = document.getElementById('regUsername').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+
+    if (!username || !email || !password) {
+      document.getElementById('registerError').textContent = 'Bitte fülle alle Felder aus';
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        token = data.token;
+        localStorage.setItem('casino_token', token);
+        currentUser = data.user;
+        balance = data.user.balance;
+
+        hideModal('registerModal');
+        showUserView();
+        updateUI();
+      } else {
+        document.getElementById('registerError').textContent = data.error || 'Registrierung fehlgeschlagen';
+      }
+    } catch (error) {
+      document.getElementById('registerError').textContent = 'Verbindungsfehler';
+    }
+  }
+
+  async function loadUserData() {
+    try {
+      const response = await fetch(`${API_URL}/api/user`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (data.success) {
+        currentUser = data.user;
+        balance = data.user.balance;
+        showUserView();
+        updateUI();
+      } else {
+        logout();
+      }
+    } catch (error) {
+      console.error('Fehler:', error);
+    }
+  }
+
+  async function updateBalance(amount, gameType = 'slot', win = false) {
     balance += amount;
     if (balance < 0) balance = 0;
-    updateBalanceDisplay();
-    saveBalance();
 
-    // Animation effect
-    const balanceElement = document.getElementById('balanceAmount');
-    balanceElement.style.color = amount > 0 ? '#23D160' : '#FF3860';
-    setTimeout(() => balanceElement.style.color = '#FFED4E', 500);
+    if (token) {
+      try {
+        const response = await fetch(`${API_URL}/api/balance/update`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ amount, gameType, win })
+        });
+        const data = await response.json();
+        if (data.success) balance = data.newBalance;
+      } catch (error) {
+        console.error('Update Fehler:', error);
+      }
+    }
+    updateUI();
+    return balance;
   }
 
-  function saveBalance() {
-    localStorage.setItem('casinoBalance', balance);
+  function logout() {
+    token = null;
+    currentUser = null;
+    localStorage.removeItem('casino_token');
+    showGuestView();
+    hideGame();
   }
 
-  function resetBalance() {
-    if (confirm('Reset balance to 10,000?')) {
-      balance = 10000;
-      updateBalanceDisplay();
-      saveBalance();
-      createConfetti();
+  function showGuestView() {
+    document.getElementById('guestView').style.display = 'flex';
+    document.getElementById('userView').style.display = 'none';
+  }
+
+  function showUserView() {
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('userView').style.display = 'flex';
+  }
+
+  function updateUI() {
+    document.getElementById('balanceAmount').textContent = balance.toLocaleString();
+    if (currentUser) {
+      document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
     }
   }
 
-  function setBet(amount) {
-    const betInput = document.getElementById(currentGame + 'Bet');
-    if (betInput) {
-      betInput.value = amount;
-      betInput.focus();
-    }
+  function showModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+  function hideModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+  function hideAllModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+
+  function initGames() {
+    const games = [
+      { id: 'slot', name: 'SLOT MACHINE', icon: 'fas fa-sliders-h', desc: 'Klassische Spielautomaten mit 3 Walzen.' }
+    ];
+    const gamesGrid = document.getElementById('gamesGrid');
+    gamesGrid.innerHTML = '';
+    games.forEach(game => {
+      const card = document.createElement('div');
+      card.className = 'game-card';
+      card.onclick = () => showGame(game.id);
+      card.innerHTML = `<div class="game-icon"><i class="${game.icon}"></i></div><h3 class="game-title">${game.name}</h3><p class="game-desc">${game.desc}</p><button class="play-btn">SPIELEN</button>`;
+      gamesGrid.appendChild(card);
+    });
   }
 
-  // ===== GAME NAVIGATION =====
   function showGame(gameId) {
-    document.querySelectorAll('.game-area').forEach(area => {
-      area.style.display = 'none';
-    });
+    if (!token) { alert('Bitte einloggen!'); return; }
     document.getElementById('gamesGrid').style.display = 'none';
-
+    document.getElementById(gameId + 'Game').style.display = 'block';
     currentGame = gameId;
-    const gameArea = document.getElementById(gameId + 'Game');
-    if (gameArea) {
-      gameArea.style.display = 'block';
-    }
-
-    // Clear previous results
-    document.querySelectorAll('.result').forEach(result => {
-      result.className = 'result';
-    });
   }
 
   function hideGame() {
-    document.querySelectorAll('.game-area').forEach(area => {
-      area.style.display = 'none';
-    });
+    document.querySelectorAll('.game-area').forEach(a => a.style.display = 'none');
     document.getElementById('gamesGrid').style.display = 'grid';
     currentGame = null;
   }
 
-  // ===== SLOT MACHINE =====
-  function spinSlot() {
+  function setBet(amount) { document.getElementById('slotBet').value = amount; }
+
+  async function spinSlot() {
     const bet = parseInt(document.getElementById('slotBet').value);
+    if (bet > balance) { alert('Nicht genug Guthaben!'); return; }
 
-    if (bet < 10) {
-      alert('Minimum bet is 10');
-      return;
-    }
-
-    if (bet > balance) {
-      alert('Insufficient balance!');
-      return;
-    }
-
-    updateBalance(-bet);
-
-    // Start animation
     const reels = document.querySelectorAll('.slot-reel');
-    reels.forEach(reel => {
-      reel.classList.add('spinning');
-      reel.style.background = 'linear-gradient(180deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%)';
-      reel.style.backgroundSize = '100% 280px';
-    });
+    reels.forEach(r => r.classList.add('spinning'));
 
-    setTimeout(() => {
-      reels.forEach(reel => reel.classList.remove('spinning'));
+    await updateBalance(-bet, 'slot', false);
 
-      const symbols = ['💎', '👑', '⭐', '🔔', '🍒', '🍋', '7️⃣', '💰'];
-      const results = [
-        symbols[Math.floor(Math.random() * symbols.length)],
-        symbols[Math.floor(Math.random() * symbols.length)],
-        symbols[Math.floor(Math.random() * symbols.length)]
-      ];
+    setTimeout(async () => {
+      reels.forEach(r => r.classList.remove('spinning'));
+      const symbols = ['🍒', '💎', '7️⃣', '💰'];
+      const results = [symbols[Math.floor(Math.random()*4)], symbols[Math.floor(Math.random()*4)], symbols[Math.floor(Math.random()*4)]];
 
-      // Show results
       document.getElementById('slotReel1').textContent = results[0];
       document.getElementById('slotReel2').textContent = results[1];
       document.getElementById('slotReel3').textContent = results[2];
 
-      // Reset background
-      reels.forEach(reel => {
-        reel.style.background = 'linear-gradient(145deg, #2c3e50, #34495e)';
-      });
+      let mult = (results[0] === results[1] && results[1] === results[2]) ? 10 : 0;
+      const resEl = document.getElementById('slotResult');
 
-      // Calculate win
-      let multiplier = 0;
-      if (results[0] === results[1] && results[1] === results[2]) {
-        if (results[0] === '💰') multiplier = 50;
-        else if (results[0] === '💎') multiplier = 25;
-        else if (results[0] === '👑') multiplier = 15;
-        else if (results[0] === '7️⃣') multiplier = 10;
-        else multiplier = 8;
-      } else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
-        multiplier = 2;
-      }
-
-      const winAmount = bet * multiplier;
-      const resultElement = document.getElementById('slotResult');
-
-      if (multiplier > 0) {
-        updateBalance(winAmount);
-        resultElement.textContent = `🎉 JACKPOT! Won ${winAmount.toLocaleString()} (x${multiplier})`;
-        resultElement.className = 'result win';
-        if (multiplier >= 10) createConfetti();
+      if (mult > 0) {
+        await updateBalance(bet * mult, 'slot', true);
+        resEl.textContent = `GEWONNEN: ${bet * mult}`;
+        resEl.className = 'result win';
       } else {
-        resultElement.textContent = `💸 Lost ${bet.toLocaleString()}`;
-        resultElement.className = 'result loss';
+        resEl.textContent = `VERLOREN: ${bet}`;
+        resEl.className = 'result loss';
       }
     }, 1000);
   }
 
-  // ===== ROULETTE =====
-  function createRouletteWheel() {
-    const wheel = document.getElementById('rouletteWheel');
-    const numbers = [
-      {num: 0, color: '#23D160'}, {num: 32, color: '#FF3860'}, {num: 15, color: '#0A0A0A'}, {num: 19, color: '#FF3860'},
-      {num: 4, color: '#0A0A0A'}, {num: 21, color: '#FF3860'}, {num: 2, color: '#0A0A0A'}, {num: 25, color: '#FF3860'},
-      {num: 17, color: '#0A0A0A'}, {num: 34, color: '#FF3860'}, {num: 6, color: '#0A0A0A'}, {num: 27, color: '#FF3860'},
-      {num: 13, color: '#0A0A0A'}, {num: 36, color: '#FF3860'}, {num: 11, color: '#0A0A0A'}, {num: 30, color: '#FF3860'},
-      {num: 8, color: '#0A0A0A'}, {num: 23, color: '#FF3860'}, {num: 10, color: '#0A0A0A'}, {num: 5, color: '#FF3860'},
-      {num: 24, color: '#0A0A0A'}, {num: 16, color: '#FF3860'}, {num: 33, color: '#0A0A0A'}, {num: 1, color: '#FF3860'},
-      {num: 20, color: '#0A0A0A'}, {num: 14, color: '#FF3860'}, {num: 31, color: '#0A0A0A'}, {num: 9, color: '#FF3860'},
-      {num: 22, color: '#0A0A0A'}, {num: 18, color: '#FF3860'}, {num: 29, color: '#0A0A0A'}, {num: 7, color: '#FF3860'},
-      {num: 28, color: '#0A0A0A'}, {num: 12, color: '#FF3860'}, {num: 35, color: '#0A0A0A'}, {num: 3, color: '#FF3860'},
-      {num: 26, color: '#0A0A0A'}
-    ];
-
-    numbers.forEach((number, index) => {
-      const angle = (index / numbers.length) * 2 * Math.PI;
-      const radius = 180;
-      const x = 200 + radius * Math.cos(angle);
-      const y = 200 + radius * Math.sin(angle);
-
-      const numElement = document.createElement('div');
-      numElement.style.position = 'absolute';
-      numElement.style.left = `${x - 25}px`;
-      numElement.style.top = `${y - 25}px`;
-      numElement.style.width = '50px';
-      numElement.style.height = '50px';
-      numElement.style.background = number.color;
-      numElement.style.borderRadius = '50%';
-      numElement.style.display = 'flex';
-      numElement.style.alignItems = 'center';
-      numElement.style.justifyContent = 'center';
-      numElement.style.color = number.color === '#0A0A0A' ? 'white' : 'white';
-      numElement.style.fontWeight = 'bold';
-      numElement.style.fontSize = '1.2rem';
-      numElement.textContent = number.num;
-      numElement.style.transform = `rotate(${angle}rad)`;
-      numElement.style.transformOrigin = '200px 200px';
-
-      wheel.appendChild(numElement);
-    });
-  }
-
-  function placeRouletteBet(betType) {
-    const bet = parseInt(document.getElementById('rouletteBet').value);
-
-    if (bet < 10) {
-      alert('Minimum bet is 10');
-      return;
-    }
-
-    if (bet > balance) {
-      alert('Insufficient balance!');
-      return;
-    }
-
-    updateBalance(-bet);
-
-    // Animation
-    const wheel = document.getElementById('rouletteWheel');
-    const ball = document.getElementById('rouletteBall');
-
-    wheel.style.transition = 'transform 3s cubic-bezier(0.1, 0.7, 0.1, 1)';
-    wheel.style.transform = 'rotate(1800deg)';
-
-    ball.style.transition = 'all 3s cubic-bezier(0.1, 0.7, 0.1, 1)';
-
-    setTimeout(() => {
-      const winningNumber = Math.floor(Math.random() * 37);
-      const isRed = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(winningNumber);
-      const isBlack = winningNumber !== 0 && !isRed;
-      const isEven = winningNumber % 2 === 0 && winningNumber !== 0;
-      const isOdd = winningNumber % 2 === 1;
-      const isLow = winningNumber >= 1 && winningNumber <= 18;
-      const isHigh = winningNumber >= 19 && winningNumber <= 36;
-
-      let won = false;
-      let multiplier = 2;
-
-      switch(betType) {
-        case 'red': won = isRed; break;
-        case 'black': won = isBlack; break;
-        case 'even': won = isEven; break;
-        case 'odd': won = isOdd; break;
-        case '1-18': won = isLow; break;
-        case '19-36': won = isHigh; break;
-      }
-
-      const winAmount = won ? bet * multiplier : 0;
-      const resultElement = document.getElementById('rouletteResult');
-
-      if (won) {
-        updateBalance(winAmount);
-        resultElement.textContent = `🎉 ${winningNumber} ${isRed ? 'RED' : isBlack ? 'BLACK' : 'GREEN'} - Won ${winAmount.toLocaleString()}`;
-        resultElement.className = 'result win';
-      } else {
-        resultElement.textContent = `💸 ${winningNumber} ${isRed ? 'RED' : isBlack ? 'BLACK' : 'GREEN'} - Lost ${bet.toLocaleString()}`;
-        resultElement.className = 'result loss';
-      }
-
-      setTimeout(() => {
-        wheel.style.transition = 'none';
-        wheel.style.transform = 'rotate(0deg)';
-        ball.style.transition = 'none';
-      }, 100);
-    }, 3000);
-  }
-
-  // ===== BLACKJACK =====
-  function startBlackjack() {
-    const bet = parseInt(document.getElementById('blackjackBet').value);
-
-    if (bet < 10) {
-      alert('Minimum bet is 10');
-      return;
-    }
-
-    if (bet > balance) {
-      alert('Insufficient balance!');
-      return;
-    }
-
-    updateBalance(-bet);
-
-    blackjackGame = {
-      bet: bet,
-      playerCards: [drawCard(), drawCard()],
-      dealerCards: [drawCard(), drawCard()],
-      playerScore: 0,
-      dealerScore: 0,
-      gameOver: false
-    };
-
-    calculateScores();
-    updateBlackjackDisplay();
-
-    document.getElementById('blackjackStart').style.display = 'none';
-    document.getElementById('blackjackHit').style.display = 'inline-block';
-    document.getElementById('blackjackStand').style.display = 'inline-block';
-
-    // Check for blackjack
-    if (blackjackGame.playerScore === 21) {
-      setTimeout(() => stand(), 1000);
-    }
-  }
-
-  function hit() {
-    if (!blackjackGame || blackjackGame.gameOver) return;
-
-    blackjackGame.playerCards.push(drawCard());
-    calculateScores();
-    updateBlackjackDisplay();
-
-    if (blackjackGame.playerScore > 21) {
-      endBlackjack('BUST - Dealer wins');
-    }
-  }
-
-  function stand() {
-    if (!blackjackGame || blackjackGame.gameOver) return;
-
-    // Dealer draws until 17 or higher
-    while (blackjackGame.dealerScore < 17) {
-      blackjackGame.dealerCards.push(drawCard());
-      calculateScores();
-    }
-
-    updateBlackjackDisplay();
-
-    if (blackjackGame.dealerScore > 21) {
-      endBlackjack('Dealer bust - You win!', 2);
-    } else if (blackjackGame.playerScore > blackjackGame.dealerScore) {
-      endBlackjack('You win!', 2);
-    } else if (blackjackGame.playerScore < blackjackGame.dealerScore) {
-      endBlackjack('Dealer wins');
-    } else {
-      endBlackjack('Push - Bet returned', 1);
-    }
-  }
-
-  function drawCard() {
-    const suits = ['♠', '♥', '♦', '♣'];
-    const values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10];
-
-    return {
-      suit: suits[Math.floor(Math.random() * suits.length)],
-      value: values[Math.floor(Math.random() * values.length)],
-      color: Math.random() > 0.5 ? 'red' : 'black'
-    };
-  }
-
-  function calculateScores() {
-    let playerScore = 0;
-    let aces = 0;
-
-    blackjackGame.playerCards.forEach(card => {
-      if (card.value === 1) {
-        aces++;
-        playerScore += 11;
-      } else {
-        playerScore += card.value;
-      }
-    });
-
-    while (playerScore > 21 && aces > 0) {
-      playerScore -= 10;
-      aces--;
-    }
-
-    blackjackGame.playerScore = playerScore;
-
-    let dealerScore = 0;
-    aces = 0;
-
-    blackjackGame.dealerCards.forEach(card => {
-      if (card.value === 1) {
-        aces++;
-        dealerScore += 11;
-      } else {
-        dealerScore += card.value;
-      }
-    });
-
-    while (dealerScore > 21 && aces > 0) {
-      dealerScore -= 10;
-      aces--;
-    }
-
-    blackjackGame.dealerScore = dealerScore;
-  }
-
-  function updateBlackjackDisplay() {
-    const playerContainer = document.getElementById('playerCards');
-    const dealerContainer = document.getElementById('dealerCards');
-
-    playerContainer.innerHTML = '';
-    dealerContainer.innerHTML = '';
-
-    // Player cards
-    blackjackGame.playerCards.forEach(card => {
-      const cardElement = document.createElement('div');
-      cardElement.className = `card ${card.color}`;
-      cardElement.innerHTML = `
-                    <div>${card.suit}</div>
-                    <div style="font-size: 1.8rem; margin-top: 10px;">
-                        ${card.value === 1 ? 'A' : card.value === 10 ? '10' : card.value}
-                    </div>
-                `;
-      playerContainer.appendChild(cardElement);
-    });
-
-    // Dealer cards (first card hidden during game)
-    blackjackGame.dealerCards.forEach((card, index) => {
-      const cardElement = document.createElement('div');
-      if (index === 0 && !blackjackGame.gameOver) {
-        cardElement.className = 'card';
-        cardElement.style.background = 'linear-gradient(45deg, #2c3e50, #34495e)';
-        cardElement.innerHTML = `<div style="font-size: 3rem;">?</div>`;
-      } else {
-        cardElement.className = `card ${card.color}`;
-        cardElement.innerHTML = `
-                        <div>${card.suit}</div>
-                        <div style="font-size: 1.8rem; margin-top: 10px;">
-                            ${card.value === 1 ? 'A' : card.value === 10 ? '10' : card.value}
-                        </div>
-                    `;
-      }
-      dealerContainer.appendChild(cardElement);
-    });
-
-    // Show scores if game over
-    if (blackjackGame.gameOver) {
-      const scoreDiv = document.createElement('div');
-      scoreDiv.style.marginTop = '20px';
-      scoreDiv.style.color = 'white';
-      scoreDiv.style.fontSize = '1.2rem';
-      scoreDiv.innerHTML = `Player: ${blackjackGame.playerScore} | Dealer: ${blackjackGame.dealerScore}`;
-      dealerContainer.parentNode.appendChild(scoreDiv);
-    }
-  }
-
-  function endBlackjack(result, multiplier = 0) {
-    blackjackGame.gameOver = true;
-
-    const winAmount = blackjackGame.bet * multiplier;
-    const resultElement = document.getElementById('blackjackResult');
-
-    if (multiplier > 0) {
-      updateBalance(winAmount);
-      resultElement.textContent = `🎉 ${result} - Won ${winAmount.toLocaleString()}`;
-      resultElement.className = 'result win';
-      if (multiplier >= 2) createConfetti();
-    } else {
-      resultElement.textContent = `💸 ${result} - Lost ${blackjackGame.bet.toLocaleString()}`;
-      resultElement.className = 'result loss';
-    }
-
-    updateBlackjackDisplay();
-
-    document.getElementById('blackjackStart').style.display = 'inline-block';
-    document.getElementById('blackjackHit').style.display = 'none';
-    document.getElementById('blackjackStand').style.display = 'none';
-  }
-
-  // ===== DICE GAME =====
-  function initDice() {
-    updateDiceDisplay(1);
-  }
-
-  function updateDiceDisplay(number) {
-    const dice = document.getElementById('dice');
-    dice.innerHTML = '';
-
-    const dotPositions = {
-      1: [[50, 50]],
-      2: [[20, 20], [80, 80]],
-      3: [[20, 20], [50, 50], [80, 80]],
-      4: [[20, 20], [20, 80], [80, 20], [80, 80]],
-      5: [[20, 20], [20, 80], [50, 50], [80, 20], [80, 80]],
-      6: [[20, 20], [20, 50], [20, 80], [80, 20], [80, 50], [80, 80]]
-    };
-
-    const positions = dotPositions[number];
-
-    positions.forEach(pos => {
-      const dot = document.createElement('div');
-      dot.style.position = 'absolute';
-      dot.style.left = `${pos[0]}%`;
-      dot.style.top = `${pos[1]}%`;
-      dot.style.transform = 'translate(-50%, -50%)';
-      dot.style.width = '20px';
-      dot.style.height = '20px';
-      dot.style.background = '#e74c3c';
-      dot.style.borderRadius = '50%';
-      dot.style.boxShadow = 'inset 0 0 5px rgba(0,0,0,0.5)';
-      dice.appendChild(dot);
-    });
-  }
-
-  function rollDice(betType) {
-    const bet = parseInt(document.getElementById('diceBet').value);
-
-    if (bet < 10) {
-      alert('Minimum bet is 10');
-      return;
-    }
-
-    if (bet > balance) {
-      alert('Insufficient balance!');
-      return;
-    }
-
-    updateBalance(-bet);
-
-    const dice = document.getElementById('dice');
-    dice.classList.add('rolling');
-
-    setTimeout(() => {
-      dice.classList.remove('rolling');
-
-      const roll = Math.floor(Math.random() * 6) + 1;
-      updateDiceDisplay(roll);
-
-      let won = false;
-      let multiplier = 2;
-
-      if (betType === 'specific') {
-        const specific = parseInt(prompt('Bet on number (1-6):'));
-        if (specific >= 1 && specific <= 6) {
-          won = roll === specific;
-          multiplier = 6;
-        } else {
-          alert('Invalid number');
-          updateBalance(bet);
-          return;
-        }
-      } else {
-        switch(betType) {
-          case 'even': won = roll % 2 === 0; break;
-          case 'odd': won = roll % 2 === 1; break;
-          case 'high': won = roll >= 4; break;
-          case 'low': won = roll <= 3; break;
-        }
-      }
-
-      const winAmount = won ? bet * multiplier : 0;
-      const resultElement = document.getElementById('diceResult');
-
-      if (won) {
-        updateBalance(winAmount);
-        resultElement.textContent = `🎉 Rolled ${roll} - Won ${winAmount.toLocaleString()} (x${multiplier})`;
-        resultElement.className = 'result win';
-        if (multiplier >= 6) createConfetti();
-      } else {
-        resultElement.textContent = `💸 Rolled ${roll} - Lost ${bet.toLocaleString()}`;
-        resultElement.className = 'result loss';
-      }
-    }, 1000);
-  }
-
-  // ===== BACCARAT =====
-  function playBaccarat(betOn) {
-    const bet = parseInt(document.getElementById('baccaratBet').value);
-
-    if (bet < 10) {
-      alert('Minimum bet is 10');
-      return;
-    }
-
-    if (bet > balance) {
-      alert('Insufficient balance!');
-      return;
-    }
-
-    updateBalance(-bet);
-
-    // Simple baccarat implementation
-    const playerScore = Math.floor(Math.random() * 10);
-    const bankerScore = Math.floor(Math.random() * 10);
-
-    let winner = '';
-    if (playerScore > bankerScore) winner = 'player';
-    else if (bankerScore > playerScore) winner = 'banker';
-    else winner = 'tie';
-
-    let multiplier = 0;
-    if (betOn === winner) {
-      if (betOn === 'player') multiplier = 2;
-      else if (betOn === 'banker') multiplier = 1.95;
-      else if (betOn === 'tie') multiplier = 8;
-    }
-
-    const winAmount = Math.floor(bet * multiplier);
-    const resultElement = document.getElementById('baccaratResult');
-
-    // Display cards
-    updateBaccaratDisplay(playerScore, bankerScore);
-
-    if (multiplier > 0) {
-      updateBalance(winAmount);
-      resultElement.textContent = `🎉 ${winner.toUpperCase()} wins! (${playerScore}:${bankerScore}) - Won ${winAmount.toLocaleString()}`;
-      resultElement.className = 'result win';
-      if (multiplier >= 8) createConfetti();
-    } else {
-      resultElement.textContent = `💸 ${winner.toUpperCase()} wins! (${playerScore}:${bankerScore}) - Lost ${bet.toLocaleString()}`;
-      resultElement.className = 'result loss';
-    }
-  }
-
-  function updateBaccaratDisplay(playerScore, bankerScore) {
-    const playerContainer = document.getElementById('baccaratPlayerCards');
-    const bankerContainer = document.getElementById('bankerCards');
-
-    playerContainer.innerHTML = '';
-    bankerContainer.innerHTML = '';
-
-    // Create card displays
-    for (let i = 0; i < 2; i++) {
-      const playerCard = document.createElement('div');
-      playerCard.className = 'card';
-      playerCard.style.background = 'linear-gradient(45deg, #3273DC, #2980b9)';
-      playerCard.innerHTML = `<div style="font-size: 2rem;">${playerScore}</div>`;
-      playerContainer.appendChild(playerCard);
-
-      const bankerCard = document.createElement('div');
-      bankerCard.className = 'card';
-      bankerCard.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
-      bankerCard.innerHTML = `<div style="font-size: 2rem;">${bankerScore}</div>`;
-      bankerContainer.appendChild(bankerCard);
-    }
-  }
-
-  // ===== COIN FLIP =====
-  function flipCoin(choice) {
-    const bet = parseInt(document.getElementById('coinBet').value);
-
-    if (bet < 10) {
-      alert('Minimum bet is 10');
-      return;
-    }
-
-    if (bet > balance) {
-      alert('Insufficient balance!');
-      return;
-    }
-
-    updateBalance(-bet);
-
-    const coin = document.getElementById('coin');
-    coin.style.transition = 'transform 1s';
-    coin.style.transform = 'rotateY(1800deg)';
-
-    setTimeout(() => {
-      coin.style.transition = 'none';
-
-      const result = Math.random() > 0.5 ? 'heads' : 'tails';
-      const won = choice === result;
-
-      // Set coin to correct side
-      if (result === 'heads') {
-        coin.style.transform = 'rotateY(0deg)';
-      } else {
-        coin.style.transform = 'rotateY(180deg)';
-      }
-
-      const winAmount = won ? Math.floor(bet * 1.5) : 0;
-      const resultElement = document.getElementById('coinResult');
-
-      if (won) {
-        updateBalance(winAmount);
-        resultElement.textContent = `🎉 ${result.toUpperCase()} - Won ${winAmount.toLocaleString()}`;
-        resultElement.className = 'result win';
-      } else {
-        resultElement.textContent = `💸 ${result.toUpperCase()} - Lost ${bet.toLocaleString()}`;
-        resultElement.className = 'result loss';
-      }
-    }, 1000);
-  }
-
-  // ===== SPECIAL EFFECTS =====
-  function createConfetti() {
-    const colors = ['#FFD700', '#FFA500', '#FF3860', '#23D160', '#3273DC', '#9B5DE5'];
-
-    for (let i = 0; i < 150; i++) {
-      const confetti = document.createElement('div');
-      confetti.style.position = 'fixed';
-      confetti.style.width = '15px';
-      confetti.style.height = '15px';
-      confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-      confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-      confetti.style.left = Math.random() * 100 + 'vw';
-      confetti.style.top = '-20px';
-      confetti.style.zIndex = '9999';
-      confetti.style.pointerEvents = 'none';
-      confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-
-      document.body.appendChild(confetti);
-
-      const animation = confetti.animate([
-        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-        { transform: `translateY(${window.innerHeight + 20}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
-      ], {
-        duration: 2000 + Math.random() * 2000,
-        easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
-      });
-
-      animation.onfinish = () => confetti.remove();
-    }
-
-    // Add sound effect if available
-    if (typeof Audio !== 'undefined') {
-      const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3');
-      audio.volume = 0.3;
-      audio.play().catch(() => {});
-    }
-  }
+  function goHome() { hideGame(); }
 </script>
 </body>
 </html>
