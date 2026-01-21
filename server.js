@@ -4,6 +4,8 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const http = require('http');
+const { Server } = require('socket.io');
 require('dotenv').config();
 
 const app = express();
@@ -81,17 +83,23 @@ app.post('/api/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Stats erstellen
-    const stats = new Stats();
-    await stats.save();
-
+    // 1. User Objekt erstellen und speichern, um eine ID zu generieren
     const user = new User({
       username,
       email,
       password: hashedPassword,
-      balance: 10000,
-      stats: stats._id
+      balance: 10000
     });
+    await user.save();
+
+    // 2. Stats erstellen und mit der soeben erstellten User-ID verknüpfen
+    const stats = new Stats({
+      userId: user._id
+    });
+    await stats.save();
+
+    // 3. User updaten, um die Stats-Referenz zu speichern
+    user.stats = stats._id;
     await user.save();
 
     const token = jwt.sign({ userId: user._id, username: user.username }, JWT_SECRET, { expiresIn: '7d' });
@@ -199,11 +207,6 @@ app.post('/api/balance/update', authenticateToken, async (req, res) => {
       }
     } else if (amount < 0) {
       stats.totalLost += Math.abs(amount);
-    }
-
-    // Favorite Game tracking
-    if (gameType) {
-      // Hier könnte man weiteres Tracking für Lieblingsspiel hinzufügen
     }
 
     stats.lastPlayed = new Date();
@@ -454,10 +457,6 @@ app.post('/api/rooms/join', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Server Fehler' });
   }
 });
-
-// WebSocket Setup (optional für Echtzeit-Chat)
-const http = require('http');
-const { Server } = require('socket.io');
 
 const server = http.createServer(app);
 const io = new Server(server, {
