@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const path = require('path'); // Neu: Für Pfade
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -16,7 +16,6 @@ app.use(cors({
 app.use(express.json());
 
 // MongoDB Connection
-// WICHTIG: Nutze process.env.MONGODB_URI für die Sicherheit!
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://helinoCasinoUser:HelinoCasino176237@193.23.160.211:27020/helinocasino?authSource=admin';
 
 mongoose.connect(MONGODB_URI)
@@ -28,7 +27,7 @@ mongoose.connect(MONGODB_URI)
       .catch(err2 => console.error('❌ Keine MongoDB Verbindung möglich:', err2));
   });
 
-// Wir nutzen das Modell aus der separaten Datei oder definieren es hier einmalig sauber
+// User Model
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
@@ -39,16 +38,14 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// Falls das Model schon existiert, nutzen wir es, sonst neu erstellen
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'casino-secret-key-123';
 
-// Middleware zum Prüfen des Tokens
+// Auth Middleware
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-
   if (!token) return res.status(401).json({ error: 'Kein Token vorhanden' });
 
   try {
@@ -125,11 +122,12 @@ app.get('/api/leaderboard', async (req, res) => {
 });
 
 // STATISCHE DATEIEN SERVIEREN
-// WICHTIG: Deine HTML/CSS/JS Dateien müssen im Ordner "public" liegen
-app.use(express.static(path.join(__dirname, 'public')));
+// GEÄNDERT: Da die Dateien im Hauptverzeichnis liegen, nutzen wir __dirname direkt
+app.use(express.static(__dirname));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  // GEÄNDERT: Suche index.html im Hauptverzeichnis statt im public-Ordner
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
