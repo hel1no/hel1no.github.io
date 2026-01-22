@@ -1832,7 +1832,7 @@
 
         <div class="controls">
           <div class="bet-controls">
-            <input type="number" class="bet-input" id="slotBet" value="100" min="10" max="1000000000">
+            <input type="number" class="bet-input" id="slotBet" value="100" min="10" max="999999999">
             <button class="btn btn-primary game-btn" onclick="spinSlot()">
               <i class="fas fa-play"></i> SPIN
             </button>
@@ -1887,7 +1887,7 @@
 
         <div class="controls">
           <div class="bet-controls">
-            <input type="number" class="bet-input" id="blackjackBet" value="100" min="10" max="100000">
+            <input type="number" class="bet-input" id="blackjackBet" value="100" min="10" max="999999999">
             <div class="chip-container">
               <div class="chip" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);" onclick="setBJBet(10)">10</div>
               <div class="chip" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);" onclick="setBJBet(50)">50</div>
@@ -1939,7 +1939,7 @@
 
         <div class="controls">
           <div class="bet-controls">
-            <input type="number" class="bet-input" id="rouletteBet" value="100" min="10" max="100000">
+            <input type="number" class="bet-input" id="rouletteBet" value="100" min="10" max="999999999">
             <button class="btn btn-primary game-btn" onclick="spinRoulette()">
               <i class="fas fa-play"></i> SPINNEN
             </button>
@@ -1990,7 +1990,7 @@
 
         <div class="controls">
           <div class="bet-controls">
-            <input type="number" class="bet-input" id="pokerBet" value="100" min="10" max="100000">
+            <input type="number" class="bet-input" id="pokerBet" value="100" min="10" max="999999999">
             <div class="chip-container">
               <div class="chip" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);" onclick="setPokerBet(10)">10</div>
               <div class="chip" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);" onclick="setPokerBet(50)">50</div>
@@ -2634,8 +2634,8 @@
     const betInput = document.getElementById('slotBet');
     const bet = parseInt(betInput.value);
 
-    if (isNaN(bet) || bet < 10 || bet > 100000) {
-      showNotification('Bitte einen Einsatz zwischen 10 und 100.000 wählen', 'error');
+    if (isNaN(bet) || bet < 10 || bet > 999999999) {
+      showNotification('Bitte einen Einsatz zwischen 10 und 999.999.999 wählen', 'error');
       return;
     }
 
