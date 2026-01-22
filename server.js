@@ -587,3 +587,327 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`🎰 Casino Server läuft auf Port ${PORT} (mit WebSocket Support)`);
 });
+
+// ===== PROPERTY/IMOBILIEN SYSTEM =====
+
+// Property-Modell
+const propertySchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  propertyType: { type: String, required: true, enum: ['haus', 'auto', 'yacht', 'jet', 'hotel', 'casino'] },
+  level: { type: Number, default: 1 },
+  baseIncome: { type: Number, required: true },
+  currentIncome: { type: Number, required: true },
+  purchasePrice: { type: Number, required: true },
+  upgradePrice: { type: Number, required: true },
+  lastCollection: { type: Date, default: Date.now },
+  totalEarned: { type: Number, default: 0 },
+  isActive: { type: Boolean, default: true },
+  name: { type: String, required: true },
+  purchasedAt: { type: Date, default: Date.now }
+});
+
+const Property = mongoose.model('Property', propertySchema);
+
+// Property Konfiguration
+const PROPERTY_CONFIG = {
+  haus: {
+    name: "Luxus Villa",
+    basePrice: 10000,
+    baseIncome: 10,
+    multiplier: 3.0,
+    icon: "🏠",
+    description: "Generiert passives Einkommen"
+  },
+  auto: {
+    name: "Sportwagen",
+    basePrice: 50000,
+    baseIncome: 50,
+    multiplier: 3.0,
+    icon: "🚗",
+    description: "Schnelles passives Einkommen"
+  },
+  yacht: {
+    name: "Luxus Yacht",
+    basePrice: 250000,
+    baseIncome: 250,
+    multiplier: 3.0,
+    icon: "🛥️",
+    description: "Höheres passives Einkommen"
+  },
+  jet: {
+    name: "Privatjet",
+    basePrice: 1000000,
+    baseIncome: 1000,
+    multiplier: 3.0,
+    icon: "✈️",
+    description: "Premium passives Einkommen"
+  },
+  hotel: {
+    name: "Hotel",
+    basePrice: 5000000,
+    baseIncome: 5000,
+    multiplier: 3.0,
+    icon: "🏨",
+    description: "Exklusives passives Einkommen"
+  },
+  casino: {
+    name: "Eigenes Casino",
+    basePrice: 25000000,
+    baseIncome: 25000,
+    multiplier: 3.0,
+    icon: "🎰",
+    description: "Ultimatives passives Einkommen"
+  }
+};
+
+// API für Properties
+app.get('/api/properties', authenticateToken, async (req, res) => {
+  try {
+    const properties = await Property.find({ userId: req.userId });
+    const user = await User.findById(req.userId);
+
+    // Berechne gesamtes passives Einkommen
+    let totalPassiveIncome = 0;
+    const now = new Date();
+
+    const updatedProperties = await Promise.all(properties.map(async (property) => {
+      if (property.isActive) {
+        const hoursSinceLastCollection = (now - new Date(property.lastCollection)) / (1000 * 60 * 60);
+        const earnedSinceLast = hoursSinceLastCollection * property.currentIncome;
+        totalPassiveIncome += earnedSinceLast;
+
+        return {
+          ...property.toObject(),
+          pendingIncome: earnedSinceLast,
+          hoursSinceLast: hoursSinceLastCollection
+        };
+      }
+      return property.toObject();
+    }));
+
+    res.json({
+      success: true,
+      properties: updatedProperties,
+      totalPassiveIncome,
+      propertyConfig: PROPERTY_CONFIG
+    });
+  } catch (error) {
+    console.error('Properties Fetch Fehler:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
+
+app.post('/api/properties/buy', authenticateToken, async (req, res) => {
+  try {
+    const { propertyType } = req.body;
+    const user = await User.findById(req.userId);
+
+    if (!PROPERTY_CONFIG[propertyType]) {
+      return res.status(400).json({ error: 'Ungültiger Property-Typ' });
+    }
+
+    const config = PROPERTY_CONFIG[propertyType];
+    const purchasePrice = config.basePrice;
+
+    // Prüfe ob bereits besessen
+    const existingProperty = await Property.findOne({
+      userId: req.userId,
+      propertyType: propertyType
+    });
+
+    if (existingProperty) {
+      return res.status(400).json({ error: 'Du besitzt dieses Property bereits' });
+    }
+
+    if (user.balance < purchasePrice) {
+      return res.status(400).json({ error: 'Nicht genug Guthaben' });
+    }
+
+    // Kaufe Property
+    user.balance -= purchasePrice;
+    await user.save();
+
+    const property = new Property({
+      userId: req.userId,
+      propertyType: propertyType,
+      level: 1,
+      baseIncome: config.baseIncome,
+      currentIncome: config.baseIncome,
+      purchasePrice: purchasePrice,
+      upgradePrice: Math.floor(purchasePrice * 3), // Upgrade kostet 3x Kaufpreis
+      name: config.name,
+      lastCollection: new Date()
+    });
+
+    await property.save();
+
+    // Update Stats
+    let stats = await Stats.findOne({ userId: req.userId });
+    if (!stats) {
+      stats = new Stats({ userId: req.userId });
+    }
+    stats.totalSpent = (stats.totalSpent || 0) + purchasePrice;
+    await stats.save();
+
+    res.json({
+      success: true,
+      property,
+      newBalance: user.balance
+    });
+  } catch (error) {
+    console.error('Property Kauf Fehler:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
+
+app.post('/api/properties/upgrade', authenticateToken, async (req, res) => {
+  try {
+    const { propertyId } = req.body;
+    const user = await User.findById(req.userId);
+    const property = await Property.findById(propertyId);
+
+    if (!property) {
+      return res.status(404).json({ error: 'Property nicht gefunden' });
+    }
+
+    if (property.userId.toString() !== req.userId.toString()) {
+      return res.status(403).json({ error: 'Nicht dein Property' });
+    }
+
+    if (user.balance < property.upgradePrice) {
+      return res.status(400).json({ error: 'Nicht genug Guthaben zum Upgraden' });
+    }
+
+    // Upgrade durchführen
+    user.balance -= property.upgradePrice;
+    property.level += 1;
+    property.currentIncome = Math.floor(property.currentIncome * 3); // Einkommen verdreifacht sich
+    property.upgradePrice = Math.floor(property.upgradePrice * 3); // Nächstes Upgrade kostet wieder 3x
+
+    await user.save();
+    await property.save();
+
+    // Update Stats
+    let stats = await Stats.findOne({ userId: req.userId });
+    if (!stats) {
+      stats = new Stats({ userId: req.userId });
+    }
+    stats.totalSpent = (stats.totalSpent || 0) + property.upgradePrice;
+    await stats.save();
+
+    res.json({
+      success: true,
+      property,
+      newBalance: user.balance
+    });
+  } catch (error) {
+    console.error('Property Upgrade Fehler:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
+
+app.post('/api/properties/collect', authenticateToken, async (req, res) => {
+  try {
+    const { propertyId } = req.body;
+    const user = await User.findById(req.userId);
+    const now = new Date();
+
+    if (propertyId === 'all') {
+      // Sammle von allen Properties
+      const properties = await Property.find({
+        userId: req.userId,
+        isActive: true
+      });
+
+      let totalCollected = 0;
+
+      for (const property of properties) {
+        const hoursSinceLastCollection = (now - new Date(property.lastCollection)) / (1000 * 60 * 60);
+        const earnedSinceLast = hoursSinceLastCollection * property.currentIncome;
+
+        if (earnedSinceLast > 0) {
+          totalCollected += earnedSinceLast;
+          property.lastCollection = now;
+          property.totalEarned += earnedSinceLast;
+          await property.save();
+        }
+      }
+
+      if (totalCollected > 0) {
+        user.balance += totalCollected;
+        await user.save();
+      }
+
+      return res.json({
+        success: true,
+        totalCollected,
+        newBalance: user.balance
+      });
+    } else {
+      // Sammle von einem spezifischen Property
+      const property = await Property.findById(propertyId);
+
+      if (!property) {
+        return res.status(404).json({ error: 'Property nicht gefunden' });
+      }
+
+      if (property.userId.toString() !== req.userId.toString()) {
+        return res.status(403).json({ error: 'Nicht dein Property' });
+      }
+
+      const hoursSinceLastCollection = (now - new Date(property.lastCollection)) / (1000 * 60 * 60);
+      const earnedSinceLast = hoursSinceLastCollection * property.currentIncome;
+
+      if (earnedSinceLast > 0) {
+        user.balance += earnedSinceLast;
+        property.lastCollection = now;
+        property.totalEarned += earnedSinceLast;
+
+        await user.save();
+        await property.save();
+      }
+
+      res.json({
+        success: true,
+        collected: earnedSinceLast,
+        newBalance: user.balance,
+        property
+      });
+    }
+  } catch (error) {
+    console.error('Property Collect Fehler:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
+
+app.get('/api/properties/offline', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const properties = await Property.find({
+      userId: req.userId,
+      isActive: true
+    });
+
+    const now = new Date();
+    let totalOfflineEarnings = 0;
+
+    for (const property of properties) {
+      const hoursSinceLastCollection = (now - new Date(property.lastCollection)) / (1000 * 60 * 60);
+      const earnedSinceLast = hoursSinceLastCollection * property.currentIncome;
+      totalOfflineEarnings += earnedSinceLast;
+    }
+
+    res.json({
+      success: true,
+      totalOfflineEarnings,
+      properties: properties.map(p => ({
+        name: p.name,
+        income: p.currentIncome,
+        pending: (now - new Date(p.lastCollection)) / (1000 * 60 * 60) * p.currentIncome
+      }))
+    });
+  } catch (error) {
+    console.error('Offline Earnings Fehler:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
