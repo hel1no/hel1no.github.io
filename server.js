@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  balance: { type: Number, default: 10000 },
+  balance: { type: Number, default: 50000 },
   gamesPlayed: { type: Number, default: 0 },
   totalWins: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
@@ -88,7 +88,7 @@ app.post('/api/register', async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      balance: 10000
+      balance: 50000
     });
     await user.save();
 
