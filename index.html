@@ -2246,6 +2246,35 @@
     }
   }
 
+  function formatLargeNumber(num) {
+    if (typeof num !== 'number') num = parseFloat(num) || 0;
+
+    if (num >= 1000000000000000000) {
+      return (num / 1000000000000000000).toFixed(2) + 'Q'; // Quintillion
+    }
+    if (num >= 1000000000000000) {
+      return (num / 1000000000000000).toFixed(2) + 'q'; // Quadrillion
+    }
+    if (num >= 1000000000000) {
+      return (num / 1000000000000).toFixed(2) + 'T'; // Trillion
+    }
+    if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(2) + 'B'; // Billion
+    }
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(2) + 'M'; // Million
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(2) + 'K'; // Thousand
+    }
+    return num.toString();
+  }
+
+  function formatWithCommas(num) {
+    if (typeof num !== 'number') num = parseFloat(num) || 0;
+    return num.toLocaleString('de-DE');
+  }
+
   function showLogin() {
     console.log('Show Login aufgerufen');
     showModal('loginModal');
@@ -2432,9 +2461,9 @@
 
     // Animation für Balance-Update
     if (amount > 0) {
-      showNotification(`+${amount.toLocaleString()} Credits!`, 'success');
+      showNotification(`+${formatLargeNumber()} Credits!`, 'success');
     } else if (amount < 0) {
-      showNotification(`${amount.toLocaleString()} Credits`, 'error');
+      showNotification(`${formatLargeNumber()} Credits`, 'error');
     }
 
     return balance;
@@ -2462,7 +2491,7 @@
   }
 
   function updateUI() {
-    document.getElementById('balanceAmount').textContent = balance.toLocaleString();
+    document.getElementById('balanceAmount').textContent = formatLargeNumber(balance);
     if (currentUser) {
       const avatar = document.getElementById('userAvatar');
       avatar.textContent = currentUser.username.charAt(0).toUpperCase();
@@ -2480,14 +2509,14 @@
   }
 
   function updateStatsUI() {
-    document.getElementById('statsGamesPlayed').textContent = userStats.gamesPlayed || 0;
-    document.getElementById('statsGamesWon').textContent = userStats.gamesWon || 0;
+    document.getElementById('statsGamesPlayed').textContent = formatWithCommas(userStats.gamesPlayed || 0);
+    document.getElementById('statsGamesWon').textContent = formatWithCommas(userStats.gamesWon || 0);
     document.getElementById('statsWinRate').textContent = userStats.gamesPlayed > 0
       ? Math.round((userStats.gamesWon / userStats.gamesPlayed) * 100) + '%'
       : '0%';
-    document.getElementById('statsBiggestWin').textContent = (userStats.biggestWin || 0).toLocaleString();
-    document.getElementById('statsTotalWon').textContent = (userStats.totalWon || 0).toLocaleString();
-    document.getElementById('statsTotalLost').textContent = (userStats.totalLost || 0).toLocaleString();
+    document.getElementById('statsBiggestWin').textContent = formatLargeNumber(userStats.biggestWin || 0);
+    document.getElementById('statsTotalWon').textContent = formatLargeNumber(userStats.totalWon || 0);
+    document.getElementById('statsTotalLost').textContent = formatLargeNumber(userStats.totalLost || 0);
   }
 
   // ===== NAVIGATION =====
@@ -2706,7 +2735,7 @@
           await updateBalance(winAmount, 'slot', true);
           userStats.gamesWon++;
 
-          resultEl.textContent = `🎉 JACKPOT! GEWONNEN: ${winAmount.toLocaleString()} Credits (x${winMultiplier}) 🎉`;
+          resultEl.textContent = `🎉 JACKPOT! GEWONNEN: ${formatLargeNumber(winAmount)} Credits (x${winMultiplier}) 🎉`;
           resultEl.className = 'result win show';
 
           // Gewinn-Animation
@@ -2718,11 +2747,11 @@
             confettiEffect();
           }
 
-          showNotification(`Gewonnen: ${winAmount.toLocaleString()} Credits!`, 'success');
+          showNotification(`Gewonnen: ${formatLargeNumber(winAmount)} Credits!`, 'success');
         } else {
-          resultEl.textContent = `Kein Gewinn. Verlust: ${bet.toLocaleString()} Credits`;
+          resultEl.textContent = `Kein Gewinn. Verlust: ${formatLargeNumber(bet)} Credits`;
           resultEl.className = 'result loss show';
-          showNotification(`${bet.toLocaleString()} Credits verloren`, 'error');
+          showNotification(`${formatLargeNumber(bet)} Credits verloren`, 'error');
         }
 
         updateStatsUI();
